@@ -1,6 +1,6 @@
 # Indian Flight Fare Predictor
 
-![Title Picture](D:\ML_Project\Images\title_pic.jpg)
+!(D:\ML_Project\Images\title_pic.jpg)
 
 
 + This is a Machine Learning Project to predict flight tickets of several Indian Airlines flying within India.
