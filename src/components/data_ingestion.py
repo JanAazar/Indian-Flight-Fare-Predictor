@@ -7,6 +7,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 
+from src.components.data_transformation import DataTransformation
+from src.components.model_trainer import ModelTraining
 
 @dataclass
 class data_ingestion_config:
@@ -21,6 +23,9 @@ class DataIngestion:
         logging.info("Starting the process of Data Ingestion")
         try:
             df=pd.read_csv(r"D:\ML_Project\Notebooks\flights.csv")
+            df=df.drop("Flight_code",axis=1)
+            df.drop_duplicates(inplace=True)
+            df=df.sample(2000)
             logging.info("Read the data as a dataframe")
 
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
@@ -47,7 +52,11 @@ class DataIngestion:
 
 if __name__=="__main__":
     obj=DataIngestion()
-    train_data,test_data=obj.start_data_ingestion()
+    train_path,test_path=obj.start_data_ingestion()
+    transformer = DataTransformation()
+    train_arr,test_arr,_ = transformer.Start_Data_Transformation(train_path,test_path)
+    trainer = ModelTraining()
+    model_report = trainer.ModelTrainer(train_arr,test_arr)
 
 
 

@@ -3,4 +3,5 @@ numpy
 tensorflow
 seaborn
 scikit-learn
+dill
 #-e .
