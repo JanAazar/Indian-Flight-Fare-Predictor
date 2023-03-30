@@ -20,7 +20,7 @@ class ModelTraining:
         self.model_trainer_config = ModelTrainerConfig()
 
 
-    def ModelTrainer(self,train_arr,test_arr):
+    def ModelTrainer(self,train_x_arr,train_y_arr,test_x_arr,test_y_arr):
         try:
             models = {"RandomForestRegressor":RandomForestRegressor()}
             
@@ -35,15 +35,7 @@ class ModelTraining:
 
             logging.info("Defined Model and Parameter Grids.")
 
-            train_x = train_arr[:,:-1]
-            train_y = train_arr[:,-1].toarray().reshape(-1,1)
-            test_x = test_arr[:,:-1]
-            test_y = test_arr[:,-1].toarray().reshape(-1,1)
-
-            logging.info("Created X and Y arrays")
-
-
-            model_report, best_parameters = evaluate_models(models,params,train_x,train_y,test_x,test_y)
+            model_report, best_parameters = evaluate_models(models,params,train_x_arr,train_y_arr,test_x_arr,test_y_arr)
             best_score = max(list(model_report.values()))
 
             if best_score<0.6:
@@ -53,7 +45,7 @@ class ModelTraining:
             best_model_name = list(model_report.keys())[best_score_index]
             best_params = best_parameters[best_score_index]
             best_model = models[best_model_name].set_params(**best_params)
-            
+            best_model.fit(train_x_arr,train_y_arr)
 
             save_object(
                 file_path=self.model_trainer_config.model_obj_filepath,
