@@ -27,8 +27,6 @@ class DataTransformation:
                          ]
             num_columns = ['Days_left','Duration_in_hours','Date_of_journey']
 
-            target_column = ["Fare"]
-
             num_pipeline= Pipeline(
                 steps=[
                 ("imputer",SimpleImputer(strategy="median")),
@@ -45,20 +43,14 @@ class DataTransformation:
                 ("scaler",StandardScaler(with_mean=False))
                 ])
             
-            target_pipeline=Pipeline(
-                steps=[
-                ("imputer",SimpleImputer(strategy="median"))
-                ]
-            )
 
-            logging.info("Created Categorical, Numerical and Target Pipelines.")
+            logging.info("Created Categorical and Numerical Pipelines.")
 
             
 
             preprocesor = ColumnTransformer(
             [("cat_encoder",cat_pipeline,cat_columns),
-             ("num_encoder",num_pipeline,num_columns),
-             ("target_encoder",target_pipeline,target_column)
+             ("num_encoder",num_pipeline,num_columns)
              ]
             ) 
 
@@ -77,12 +69,16 @@ class DataTransformation:
 
             train_df['Date_of_journey'] = train_df['Date_of_journey'].apply(date_to_int)
             test_df['Date_of_journey'] = test_df['Date_of_journey'].apply(date_to_int)
+            
+            train_x_df = train_df.drop("Fare")
+            train_y_arr = train_df["Fare"].values
+            test_x_df = test_df.drop("Fare")
+            test_y_arr = test_df["Fare"].values
 
             preprocesor = self.get_processor()
 
-
-            train_arr = preprocesor.fit_transform(train_df)
-            test_arr =  preprocesor.transform(test_df)
+            train_x_arr = preprocesor.fit_transform(train_x_df)
+            test_x_arr =  preprocesor.transform(test_x_df)
 
             logging.info("Applied transformations on train and test sets.")
 
@@ -93,8 +89,10 @@ class DataTransformation:
             logging.info("Saved Preprocessor")
 
             return (
-                train_arr,
-                test_arr,
+                train_x_arr,
+                train_y_arr,
+                test_x_arr,
+                test_y_arr,
                 self.data_transformation_config.preprocessor_obj_filepath
             )
 
