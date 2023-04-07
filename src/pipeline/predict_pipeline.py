@@ -13,6 +13,7 @@ class PredictPipeline:
     def predict(self,features):
         preprocessor = load_object(os.path.join('artifacts','preprocessor.pkl'))
         model = load_object(os.path.join('artifacts','model.pkl'))
+        logging.info(features)
         processed_data = preprocessor.transform(features)
         preds = model.predict(processed_data)
         return preds
@@ -31,9 +32,9 @@ class CustomData:
                  Departure:str,
                  Arrival:str,
                  Total_stops:str,
-                 Days_Left:int,
                  Duration_in_hours:int,
-                 Date_of_journey:int
+                 Day_of_journey:str,
+                 Month_of_journey:str
                  ):
 
         self.Airline = Airline,
@@ -44,24 +45,24 @@ class CustomData:
         self.Departure = Departure,
         self.Arrival = Arrival,
         self.Total_stops = Total_stops,
-        self.Days_left = Days_Left,
         self.Duration_in_hours = Duration_in_hours,
-        self.Date_of_journey = Date_of_journey
+        self.Day_of_journey = Day_of_journey,
+        self.Month_of_jourey = Month_of_journey
+        self.Date_of_journey = "2023" + str(self.Month_of_jourey) #+ str(self.Day_of_journey)
 
     def get_data_as_data_frame(self):
         try:
             custom_data_input_dict = {
-                "Date_of_journey": [self.Date_of_journey],
-                "Journey_day": [self.Journey_day],
-                "Airline": [self.Airline],
-                "Class": [self.Class],
-                "Source":[self.Source],
-                "Departure": [self.Departure],
-                "Total_stops": [self.Total_stops],
-                "Arrival": [self.Arrival],
-                "Destination": [self.Destination],
-                "Duration_in_hours":[self.Duration_in_hours],
-                "Days_left":[self.Days_left],
+                "Date_of_journey": int(self.Date_of_journey),
+                "Journey_day": self.Journey_day,
+                "Airline": self.Airline,
+                "Class": self.Class,
+                "Source":self.Source,
+                "Departure": self.Departure,
+                "Total_stops": self.Total_stops,
+                "Arrival": self.Arrival,
+                "Destination": self.Destination,
+                "Duration_in_hours":self.Duration_in_hours,
             }
 
             return pd.DataFrame(custom_data_input_dict)

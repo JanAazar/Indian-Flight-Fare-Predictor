@@ -46,7 +46,7 @@ class ModelTraining:
             best_params = best_parameters[best_score_index]
             best_model_weights = best_weights[best_score_index]
             best_model = models[best_model_name].set_params(**best_params)
-            best_model.feature_importances_ = best_model_weights
+            best_model.fit(train_x_arr,train_y_arr)
 
             save_object(
                 file_path=self.model_trainer_config.model_obj_filepath,

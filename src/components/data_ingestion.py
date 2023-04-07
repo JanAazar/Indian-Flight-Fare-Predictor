@@ -23,9 +23,13 @@ class DataIngestion:
         logging.info("Starting the process of Data Ingestion")
         try:
             df=pd.read_csv(r"D:\ML_Project\Notebooks\flights.csv")
-            df=df.drop("Flight_code",axis=1)
+
+            df=df.drop(["Flight_code","Days_left"],axis=1)
+
             df.drop_duplicates(inplace=True)
+
             df=df.sample(2000)
+            
             logging.info("Read the data as a dataframe")
 
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
@@ -54,9 +58,14 @@ if __name__=="__main__":
     obj=DataIngestion()
     train_path,test_path=obj.start_data_ingestion()
     transformer = DataTransformation()
-    train_arr,test_arr,_ = transformer.Start_Data_Transformation(train_path,test_path)
+    train_x,train_y,test_x,test_y,processor_path = transformer.Start_Data_Transformation(train_path,test_path)
     trainer = ModelTraining()
-    model_report = trainer.ModelTrainer(train_arr,test_arr)
+    best_model_name,best_score,best_params = trainer.ModelTrainer(train_x,train_y,test_x,test_y)
+
+
+
+
+
 
 
 

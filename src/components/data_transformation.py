@@ -25,7 +25,7 @@ class DataTransformation:
         try:
             cat_columns=['Journey_day','Airline','Source','Destination','Class','Departure','Arrival','Total_stops'
                          ]
-            num_columns = ['Days_left','Duration_in_hours','Date_of_journey']
+            num_columns = ['Duration_in_hours','Date_of_journey']
 
             num_pipeline= Pipeline(
                 steps=[
@@ -70,9 +70,9 @@ class DataTransformation:
             train_df['Date_of_journey'] = train_df['Date_of_journey'].apply(date_to_int)
             test_df['Date_of_journey'] = test_df['Date_of_journey'].apply(date_to_int)
             
-            train_x_df = train_df.drop("Fare")
+            train_x_df = train_df.drop("Fare",axis=1)
             train_y_arr = train_df["Fare"].values
-            test_x_df = test_df.drop("Fare")
+            test_x_df = test_df.drop("Fare",axis=1)
             test_y_arr = test_df["Fare"].values
 
             preprocesor = self.get_processor()
